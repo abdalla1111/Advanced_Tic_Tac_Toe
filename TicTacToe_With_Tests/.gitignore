@@ -1,0 +1,21 @@
+# Build directories
+build/
+debug/
+release/
+*_build/
+
+# Executables
+*.exe
+*.dll
+
+# Qt User-specific files
+*.pro.user
+*.pro.user.*
+
+# Database files
+*.db
+*.db-journal
+
+# IDE and system files
+.qtc_clangd/
+.DS_Store
