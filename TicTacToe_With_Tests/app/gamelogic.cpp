@@ -1,4 +1,4 @@
-#include "GameLogic.h"
+#include "gamelogic.h"
 #include "AIPlayer.h" // Now directly included due to INCLUDEPATH
 #include "Board.h"    // Now directly included due to INCLUDEPATH
 #include <QDebug>     // For debugging output
