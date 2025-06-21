@@ -1,23 +1,27 @@
+# Name of the workflow
 name: Build and Test Qt Project
 
+# Controls when the workflow runs
 on:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
+# A workflow is made of one or more jobs
 jobs:
-  # Job for Linux
+  # Job 1: Build on Linux (Ubuntu)
   build_linux:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Install dependencies
+      - name: Install Python and aqtinstall
         run: pip install aqtinstall
+      # Install all required graphics libraries for Qt on Linux
       - name: Install Linux build dependencies
         run: sudo apt-get update && sudo apt-get install -y libgl1-mesa-dev libegl1-mesa-dev libxcb-xinerama0-dev
-      - name: Install Qt
+      - name: Install Qt on Linux
         shell: bash
         run: |
           aqt install-qt linux desktop 6.6.0 gcc_64 -O ${{ runner.temp }}/Qt
@@ -27,25 +31,23 @@ jobs:
           mkdir build && cd build
           qmake ../TicTacToe_With_Tests/TicTacToe_With_Tests.pro
           make
-# - name: Run Tests
-      #   run: ./build/TicTacToe_With_Tests/tests/tests
-  # Job for Windows
+      - name: Run Tests
+        run: ./build/TicTacToe_With_Tests/tests/tests
+
+  # Job 2: Build on Windows
   build_windows:
     runs-on: windows-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Install dependencies
+      # This action correctly sets up the MSVC compiler environment
+      - name: Setup MSVC
+        uses: ilammy/msvc-dev-cmd@v1
+      - name: Install Python and aqtinstall
         run: pip install aqtinstall
-      - name: Install Qt
+      - name: Install Qt on Windows
         shell: bash
         run: aqt install-qt windows desktop 6.6.0 win64_msvc2019_64 -O C:/Qt
-      # This action correctly sets up the MSVC compiler environment
-      - name: Configure and Build
-        uses: ilammy/msvc-dev-cmd@v1
-        with:
-          arch: x64
-          toolset: 14.29 # For VS2019
       - name: Build and Test
         shell: powershell
         run: |
@@ -56,15 +58,15 @@ jobs:
           nmake
           .\TicTacToe_With_Tests\tests\release\tests.exe
 
-  # Job for macOS
+  # Job 3: Build on macOS
   build_macos:
     runs-on: macos-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Install dependencies
+      - name: Install Python and aqtinstall
         run: pip install aqtinstall
-      - name: Install Qt
+      - name: Install Qt on macOS
         shell: bash
         run: |
           aqt install-qt mac desktop 6.6.0 clang_64 -O ${{ runner.temp }}/Qt
@@ -75,4 +77,4 @@ jobs:
           qmake ../TicTacToe_With_Tests/TicTacToe_With_Tests.pro
           make
       - name: Run Tests
-        run: ./build/TicTacToe_With_Tests/tests/tests
+        run: ./build/TicTacToe_With_Tests/tests/tests.app/Contents/MacOS/tests
