@@ -2,8 +2,7 @@
 #define TST_AIPLAYER_H
 
 #include <QtTest>
-#include "aiplayer.h" // <-- Add this line back
-
+#include "AIPlayer.h"
 class TestAIPlayer : public QObject
 {
     Q_OBJECT
