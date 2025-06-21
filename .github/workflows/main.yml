@@ -1,70 +1,79 @@
+# Name of the workflow
 name: Build and Test Qt Project
 
+# Controls when the workflow runs
 on:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
+# A workflow is made of one or more jobs
 jobs:
-  build-and-test:
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-    runs-on: ${{ matrix.os }}
-
+  # Job 1: Build on Linux (Ubuntu)
+  build_linux:
+    runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-
-    # This step sets up the MSVC compiler environment on Windows
-    - name: Setup MSVC
-      if: runner.os == 'Windows'
-      uses: microsoft/setup-msvc@v1 # Corrected version
-
-    - name: Install dependencies
+    - name: Install Python and aqtinstall
       run: pip install aqtinstall
-
-    - name: Install Linux build dependencies
-      if: runner.os == 'Linux'
+    - name: Install Linux build dependencies (OpenGL & EGL)
       run: sudo apt-get update && sudo apt-get install -y libgl-dev libegl1-mesa-dev
-
-    - name: Install Qt (Manual)
+    - name: Install Qt on Linux
       shell: bash
       run: |
-        if [[ "${{ runner.os }}" == "Windows" ]]; then
-          aqt install-qt windows desktop 6.6.0 win64_msvc2019_64 -O C:/Qt
-          echo "C:/Qt/6.6.0/msvc2019_64/bin" >> $GITHUB_PATH
-        elif [[ "${{ runner.os }}" == "macOS" ]]; then
-          aqt install-qt mac desktop 6.6.0 clang_64 -O /Users/runner/Qt
-          echo "/Users/runner/Qt/6.6.0/macos/bin" >> $GITHUB_PATH
-        else
-          aqt install-qt linux desktop 6.6.0 gcc_64 -O /home/runner/Qt
-          echo "/home/runner/Qt/6.6.0/gcc_64/bin" >> $GITHUB_PATH
-        fi
-    
-    - name: Configure Project (qmake)
+        aqt install-qt linux desktop 6.6.0 gcc_64 -O /home/runner/Qt
+        echo "/home/runner/Qt/6.6.0/gcc_64/bin" >> $GITHUB_PATH
+    - name: Configure, Build, and Test
       run: |
         mkdir build
         cd build
-        qmake ${{ github.workspace }}/TicTacToe_With_Tests/TicTacToe_With_Tests.pro
+        qmake ../TicTacToe_With_Tests/TicTacToe_With_Tests.pro
+        make
+        ./TicTacToe_With_Tests/tests/tests
 
-    - name: Build Project (make/nmake)
+  # Job 2: Build on Windows
+  build_windows:
+    runs-on: windows-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    - name: Setup MSVC compiler environment
+      uses: microsoft/setup-msvc@v1
+    - name: Install Python and aqtinstall
+      run: pip install aqtinstall
+    - name: Install Qt on Windows
       shell: bash
       run: |
+        aqt install-qt windows desktop 6.6.0 win64_msvc2019_64 -O C:/Qt
+        echo "C:/Qt/6.6.0/msvc2019_64/bin" >> $GITHUB_PATH
+    - name: Configure, Build, and Test
+      shell: bash
+      run: |
+        mkdir build
         cd build
-        if [[ "${{ runner.os }}" == "Windows" ]]; then
-          nmake
-        else
-          make
-        fi
+        qmake ../TicTacToe_With_Tests/TicTacToe_With_Tests.pro
+        nmake
+        ./TicTacToe_With_Tests/tests/release/tests.exe
 
-    - name: Run Tests
+  # Job 3: Build on macOS
+  build_macos:
+    runs-on: macos-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    - name: Install Python and aqtinstall
+      run: pip install aqtinstall
+    - name: Install Qt on macOS
       shell: bash
       run: |
-        cd build/TicTacToe_With_Tests/tests
-        if [[ "${{ runner.os }}" == "Windows" ]]; then
-          ./release/tests.exe
-        else
-          ./tests
-        fi
+        aqt install-qt mac desktop 6.6.0 clang_64 -O /Users/runner/Qt
+        echo "/Users/runner/Qt/6.6.0/macos/bin" >> $GITHUB_PATH
+    - name: Configure, Build, and Test
+      run: |
+        mkdir build
+        cd build
+        qmake ../TicTacToe_With_Tests/TicTacToe_With_Tests.pro
+        make
+        ./TicTacToe_With_Tests/tests/tests
