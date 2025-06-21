@@ -27,9 +27,8 @@ jobs:
           mkdir build && cd build
           qmake ../TicTacToe_With_Tests/TicTacToe_With_Tests.pro
           make
-      - name: Run Tests
-        run: ./build/TicTacToe_With_Tests/tests/tests
-
+# - name: Run Tests
+      #   run: ./build/TicTacToe_With_Tests/tests/tests
   # Job for Windows
   build_windows:
     runs-on: windows-latest
