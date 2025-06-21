@@ -1,0 +1,78 @@
+# Name of the workflow
+name: Build and Test Qt Project
+
+# Controls when the workflow runs
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+# A workflow is made of one or more jobs
+jobs:
+  build-and-test:
+    # Use a matrix strategy to run on multiple OSes
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+
+    # Steps to be executed
+    steps:
+    # Step 1: Check out the repository code
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    # Step 2: Install Python tool for Qt installer
+    - name: Install dependencies
+      run: pip install aqtinstall
+
+    # Step 3: Install Graphics libraries required by Qt on Linux
+    - name: Install Linux build dependencies
+      if: runner.os == 'Linux'
+      # We add libegl1-mesa-dev to the list of packages to install
+      run: sudo apt-get update && sudo apt-get install -y libgl-dev libegl1-mesa-dev
+
+    # Step 4: Manually install Qt using aqtinstall
+    - name: Install Qt (Manual)
+      shell: bash
+      run: |
+        if [[ "${{ runner.os }}" == "Windows" ]]; then
+          aqt install-qt windows desktop 6.6.0 win64_msvc2019_64 -O C:/Qt
+          echo "C:/Qt/6.6.0/msvc2019_64/bin" >> $GITHUB_PATH
+        elif [[ "${{ runner.os }}" == "macOS" ]]; then
+          aqt install-qt mac desktop 6.6.0 clang_64 -O /Users/runner/Qt
+          echo "/Users/runner/Qt/6.6.0/macos/bin" >> $GITHUB_PATH
+        else
+          aqt install-qt linux desktop 6.6.0 gcc_64 -O /home/runner/Qt
+          echo "/home/runner/Qt/6.6.0/gcc_64/bin" >> $GITHUB_PATH
+        fi
+    
+    # Step 5: Configure the project using qmake
+    - name: Configure Project (qmake)
+      run: |
+        mkdir build
+        cd build
+        qmake ${{ github.workspace }}/TicTacToe_With_Tests/TicTacToe_With_Tests.pro
+
+    # Step 6: Compile the project
+    - name: Build Project (make/nmake)
+      shell: bash
+      run: |
+        cd build
+        if [[ "${{ runner.os }}" == "Windows" ]]; then
+          nmake
+        else
+          make
+        fi
+
+    # Step 7: Run the tests
+    - name: Run Tests
+      shell: bash
+      run: |
+        cd build/TicTacToe_With_Tests/tests
+        if [[ "${{ runner.os }}" == "Windows" ]]; then
+          ./release/tests.exe
+        else
+          ./tests
+        fi
