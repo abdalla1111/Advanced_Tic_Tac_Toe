@@ -23,17 +23,22 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    # Step 2: Install Python tool for Qt installer
+    # <<< THIS IS THE NEW STEP FOR WINDOWS >>>
+    # Step 2: Setup MSVC compiler environment for Windows
+    - name: Setup MSVC
+      if: runner.os == 'Windows'
+      uses: microsoft/setup-msvc@v1.1
+    
+    # Step 3: Install dependencies (Python and aqtinstall)
     - name: Install dependencies
       run: pip install aqtinstall
 
-    # Step 3: Install Graphics libraries required by Qt on Linux
+    # Step 4: Install Graphics libraries required by Qt on Linux
     - name: Install Linux build dependencies
       if: runner.os == 'Linux'
-      # We add libegl1-mesa-dev to the list of packages to install
       run: sudo apt-get update && sudo apt-get install -y libgl-dev libegl1-mesa-dev
 
-    # Step 4: Manually install Qt using aqtinstall
+    # Step 5: Manually install Qt using aqtinstall
     - name: Install Qt (Manual)
       shell: bash
       run: |
@@ -48,14 +53,14 @@ jobs:
           echo "/home/runner/Qt/6.6.0/gcc_64/bin" >> $GITHUB_PATH
         fi
     
-    # Step 5: Configure the project using qmake
+    # Step 6: Configure the project using qmake
     - name: Configure Project (qmake)
       run: |
         mkdir build
         cd build
-        qmake ${{ github.workspace }}/TicTacToe_With_Tests/TicTacToe_With_Tests.pro
+        qmake ../TicTacToe_With_Tests/TicTacToe_With_Tests.pro
 
-    # Step 6: Compile the project
+    # Step 7: Compile the project
     - name: Build Project (make/nmake)
       shell: bash
       run: |
@@ -66,7 +71,7 @@ jobs:
           make
         fi
 
-    # Step 7: Run the tests
+    # Step 8: Run the tests
     - name: Run Tests
       shell: bash
       run: |
