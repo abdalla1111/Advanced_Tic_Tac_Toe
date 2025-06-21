@@ -1,7 +1,7 @@
 #ifndef GAMELOGIC_H
 #define GAMELOGIC_H
 
-#include "Board.h"
+#include "board.h"
 #include <QObject>
 #include <QPoint>
 #include <QStringList>

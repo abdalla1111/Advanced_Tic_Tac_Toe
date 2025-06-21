@@ -1,5 +1,5 @@
 
-#include "Board.h"
+#include "board.h"
 const int Board::EMPTY = 0;
 const int Board::PLAYER_X = 1;
 const int Board::PLAYER_O = -1;

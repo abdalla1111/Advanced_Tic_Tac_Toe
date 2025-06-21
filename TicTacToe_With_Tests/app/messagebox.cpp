@@ -1,4 +1,4 @@
-#include "MessageBox.h"
+#include "messagebox.h"
 
 namespace Utils {
 void showStyledMessageBox(QWidget *parent, const QString &title, const QString &text, bool isWarning) {

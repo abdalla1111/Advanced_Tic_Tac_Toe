@@ -4,8 +4,8 @@
 // Include custom classes
 #include "DatabaseManager.h"
 #include "gamelogic.h"
-    #include "Board.h" // For Board::PLAYER_X, Board::PLAYER_O constants
-#include "MessageBox.h"
+    #include "board.h" // For Board::PLAYER_X, Board::PLAYER_O constants
+#include "messagebox.h"
 
 // Standard Qt headers
 #include <QMessageBox>
