@@ -4,11 +4,10 @@ CONFIG -= app_bundle
 
 QT += testlib widgets sql
 
-# Define the path to the app directory using a robust variable
-# $$top_srcdir always points to the directory of the top-level .pro file
+# Use the robust top_srcdir variable to find the app directory
 APP_DIR = $$top_srcdir/TicTacToe_With_Tests/app
 
-# Add the app's subdirectories to the include path
+# Add all necessary include paths for the compiler
 INCLUDEPATH += $$APP_DIR \
                $$APP_DIR/core \
                $$APP_DIR/logic \
