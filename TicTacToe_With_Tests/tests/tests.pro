@@ -1,21 +1,24 @@
-QT += testlib widgets sql
+# Tell qmake this is a console application for tests
+TEMPLATE = app
 CONFIG += console testcase
 CONFIG -= app_bundle
-TEMPLATE = app
 
-# Point to the app project file to create a dependency
-# This tells qmake that the 'tests' project depends on the 'app' project
-SUBDIRS = ../app
-subdirs.depends = ../app
+# Link against the necessary Qt modules
+QT += testlib widgets sql
 
-# Add the app's source directory and subdirectories to the include path
-INCLUDEPATH += ../app \
-               ../app/core \
-               ../app/logic \
-               ../app/database \
-               ../app/utils
+# Define the relative path to the app directory.
+# From the 'tests' folder, this is one level up and into the 'app' folder.
+APP_DIR = ../app
 
-# List the test source files
+# Add the app directory AND its subdirectories to the include path.
+# This tells the compiler where to find headers like "board.h" and "AIPlayer.h".
+INCLUDEPATH += $$APP_DIR \
+               $$APP_DIR/core \
+               $$APP_DIR/logic \
+               $$APP_DIR/database \
+               $$APP_DIR/utils
+
+# List the source files FOR THE TEST SUITE ITSELF.
 SOURCES += \
     main.cpp \
     tst_aiplayer.cpp \
@@ -23,15 +26,16 @@ SOURCES += \
     tst_testboard.cpp \
     tst_gamelogic.cpp
 
-# Add the application's source files so they are compiled and linked with the tests
+# Also, list THE APPLICATION'S source files.
+# They need to be compiled and linked with the tests to create the final test executable.
 SOURCES += \
-    ../app/board.cpp \
-    ../app/gamelogic.cpp \
-    ../app/AIPlayer.cpp \
-    ../app/DatabaseManager.cpp \
-    ../app/messagebox.cpp
+    $$APP_DIR/board.cpp \
+    $$APP_DIR/gamelogic.cpp \
+    $$APP_DIR/AIPlayer.cpp \
+    $$APP_DIR/DatabaseManager.cpp \
+    $$APP_DIR/messagebox.cpp
 
-# List the test header files that require MOC
+# List the test header files that use Q_OBJECT and need the moc.
 HEADERS += \
     tst_aiplayer.h \
     tst_databasemanager.h \
