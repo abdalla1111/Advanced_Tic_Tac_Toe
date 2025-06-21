@@ -18,9 +18,8 @@ jobs:
       uses: actions/checkout@v4
     - name: Install Python and aqtinstall
       run: pip install aqtinstall
-    # Install all required graphics libraries for Qt on Linux
     - name: Install Linux build dependencies
-      run: sudo apt-get update && sudo apt-get install -y libgl1-mesa-dev libegl1-mesa-dev libxcb-xinerama0-dev
+      run: sudo apt-get update && sudo apt-get install -y libgl1-mesa-dev libegl1-mesa-dev
     - name: Install Qt on Linux
       shell: bash
       run: |
@@ -42,7 +41,7 @@ jobs:
       uses: actions/checkout@v4
     # Set up the MSVC compiler environment
     - name: Setup MSVC
-      uses: microsoft/setup-msvc@v1
+      uses: microsoft/setup-msvc@v2 # <-- Corrected version from v1 to v2
     - name: Install Python and aqtinstall
       run: pip install aqtinstall
     - name: Install Qt on Windows
