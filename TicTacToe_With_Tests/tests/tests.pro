@@ -1,18 +1,19 @@
-TEMPLATE = app
+QT += testlib widgets sql
 CONFIG += console testcase
 CONFIG -= app_bundle
+TEMPLATE = app
 
-QT += testlib widgets sql
+# Point to the app project file to create a dependency
+# This tells qmake that the 'tests' project depends on the 'app' project
+SUBDIRS = ../app
+subdirs.depends = ../app
 
-# Use the robust top_srcdir variable to find the app directory
-APP_DIR = $$top_srcdir/TicTacToe_With_Tests/app
-
-# Add all necessary include paths for the compiler
-INCLUDEPATH += $$APP_DIR \
-               $$APP_DIR/core \
-               $$APP_DIR/logic \
-               $$APP_DIR/database \
-               $$APP_DIR/utils
+# Add the app's source directory and subdirectories to the include path
+INCLUDEPATH += ../app \
+               ../app/core \
+               ../app/logic \
+               ../app/database \
+               ../app/utils
 
 # List the test source files
 SOURCES += \
@@ -22,15 +23,15 @@ SOURCES += \
     tst_testboard.cpp \
     tst_gamelogic.cpp
 
-# Add the application's source files to be compiled with the tests
+# Add the application's source files so they are compiled and linked with the tests
 SOURCES += \
-    $$APP_DIR/board.cpp \
-    $$APP_DIR/gamelogic.cpp \
-    $$APP_DIR/AIPlayer.cpp \
-    $$APP_DIR/DatabaseManager.cpp \
-    $$APP_DIR/messagebox.cpp
+    ../app/board.cpp \
+    ../app/gamelogic.cpp \
+    ../app/AIPlayer.cpp \
+    ../app/DatabaseManager.cpp \
+    ../app/messagebox.cpp
 
-# List the test header files
+# List the test header files that require MOC
 HEADERS += \
     tst_aiplayer.h \
     tst_databasemanager.h \
