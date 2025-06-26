@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>550</width>
-    <height>650</height>
+    <height>690</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,30 +15,23 @@
   </property>
   <property name="styleSheet">
    <string notr="true">
-/* Modern Dark Theme for Tic-Tac-Toe
----------------------------------
-Main Colors:
-- Background: #2c3e50 (Midnight Blue)
-- Foreground/Containers: #34495e (Wet Asphalt)
-- Primary Text: #ecf0f1 (Clouds)
-- Primary Action: #1abc9c (Turquoise)
-- Primary Hover: #16a085 (Green Sea)
-- Player X: #3498db (Peter River Blue)
-- Player O: #e74c3c (Alizarin Red)
-- Input Fields: #2c3e50
-*/
+/*
+ * Professional Catppuccin-Macchiato Dark Theme V4
+ */
 
+/* === MAIN WINDOW === */
 QWidget#MainWindow {
-    background-color: #2c3e50;
+    background-color: #24273a; /* base */
 }
 
 QStackedWidget {
     background-color: transparent;
 }
 
+
 /* === LABELS === */
 QLabel {
-    color: #ecf0f1;
+    color: #cad3f5; /* text */
     font-family: &quot;Segoe UI&quot;, sans-serif;
 }
 
@@ -48,148 +41,254 @@ QLabel#gameNameLabelPage_2,
 QLabel#gameNameLabelPage_3,
 QLabel#gameNameLabelPage_5,
 QLabel#gameNameLabelPage_6,
-QLabel#gameNameLabelPage_7 {
-    color: #ecf0f1;
-    font: bold 42pt &quot;Segoe UI&quot;;
+QLabel#myAccountTitleLabel,
+QLabel#aiDifficultyLabel {
+    color: #cad3f5; /* text */
+    font: bold 40pt &quot;Segoe UI Semibold&quot;;
+    padding-bottom: 10px;
 }
 
 QLabel#gameStatusLabel {
-    color: #ecf0f1;
+    color: #24273a; /* base */
     font: bold 16pt &quot;Segoe UI&quot;;
-    background-color: #34495e;
+    background-color: #89b4fa; /* blue */
     border-radius: 8px;
-    padding: 10px;
+    padding: 12px;
+}
+
+QLabel#signupLoginPageLabel,
+QLabel#existingAccountLabel {
+    color: #a5adce; /* subtext0 */
+}
+
+QGroupBox#groupBox_7 QLabel {
+    font-size: 14pt;
+    padding: 5px;
 }
 
 
 /* === BUTTONS === */
 QPushButton {
-    color: white;
-    background-color: #3498db; /* Blue for secondary buttons */
-    border: none;
+    color: #24273a; /* base */
+    background-color: #89b4fa; /* blue */
+    border: 1px solid #89b4fa;
     border-radius: 8px;
-    padding: 10px;
+    padding: 12px;
     font: bold 12pt &quot;Segoe UI&quot;;
+    outline: none; /* remove focus rectangle */
 }
 
 QPushButton:hover {
-    background-color: #2980b9;
+    background-color: #a6e3a1; /* green */
+    border-color: #a6e3a1;
 }
 
-/* Primary Action Buttons (Login, Register, etc.) */
-QPushButton#loginButton,
-QPushButton#registerButton,
-QPushButton#playerVsAiButton,
-QPushButton#playerVsPlayerButton {
-    background-color: #1abc9c; /* Turquoise */
-    font-size: 14pt;
+QPushButton#myGameHistoryButton,
+QPushButton#myAccountButton,
+QPushButton#backButtonGamePage,
+QPushButton#resetGameboardButton,
+QPushButton#backButtonAccount,
+QPushButton#logoutButtonAccount,
+QPushButton#backButtonHistory,
+QPushButton#replayGameButton,
+QPushButton#deleteGameButton,
+QPushButton#backButtonReset,
+QPushButton#resetPasswordButton,
+QPushButton#backButtonAiPage {
+    background-color: #5b6078; /* surface2 */
+    border-color: #5b6078;
+    color: #cad3f5; /* text */
 }
 
-QPushButton#loginButton:hover,
-QPushButton#registerButton:hover,
-QPushButton#playerVsAiButton:hover,
-QPushButton#playerVsPlayerButton:hover {
-    background-color: #16a085;
+QPushButton#myGameHistoryButton:hover,
+QPushButton#myAccountButton:hover,
+QPushButton#backButtonGamePage:hover,
+QPushButton#resetGameboardButton:hover,
+QPushButton#backButtonAccount:hover,
+QPushButton#logoutButtonAccount:hover,
+QPushButton#backButtonHistory:hover,
+QPushButton#replayGameButton:hover,
+QPushButton#deleteGameButton:hover,
+QPushButton#backButtonReset:hover,
+QPushButton#resetPasswordButton:hover,
+QPushButton#backButtonAiPage:hover {
+    background-color: #494d64; /* surface1 */
+    border-color: #494d64;
 }
 
-/* Link-style Buttons */
-QPushButton#signupLoginPageButton, QPushButton#noWorriesButton, QPushButton#loginButtonSignupPage {
+QPushButton#signupLoginPageButton,
+QPushButton#noWorriesButton,
+QPushButton#loginButtonSignupPage,
+QPushButton#showLoginPasswordButton,
+QPushButton#showSignupPasswordButton,
+QPushButton#showResetPasswordButton {
     background-color: transparent;
-    color: #1abc9c;
+    color: #89b4fa; /* blue */
     font-size: 10pt;
+    font-weight: bold;
+    border: none;
+    padding: 5px;
+}
+QPushButton#signupLoginPageButton:hover,
+QPushButton#noWorriesButton:hover,
+QPushButton#loginButtonSignupPage:hover,
+QPushButton#showLoginPasswordButton:hover,
+QPushButton#showSignupPasswordButton:hover,
+QPushButton#showResetPasswordButton:hover {
     text-decoration: underline;
+    color: #a6e3a1; /* green */
 }
 
+QPushButton#noWorriesButton { text-align: left; }
+QPushButton#showLoginPasswordButton { text-align: right; }
+QPushButton#showSignupPasswordButton { text-align: right; }
+QPushButton#showResetPasswordButton { text-align: right; }
 
-/* === GAME BOARD BUTTONS === */
+QPushButton#changePasswordButton {
+    background-color: transparent;
+    color: #89b4fa; /* blue */
+    border: 1px solid #89b4fa;
+}
+QPushButton#changePasswordButton:hover {
+    background-color: #89b4fa;
+    color: #24273a;
+}
+
 QGroupBox#groupBox_3 QPushButton {
-    font: bold 60pt &quot;Segoe UI&quot;; /* Larger font for X and O */
-    background-color: #34495e;
+    font: bold 60pt &quot;Segoe UI&quot;;
+    background-color: #494d64; /* surface1 */
+    color: #cad3f5; /* text */
+    border-radius: 12px;
 }
 QGroupBox#groupBox_3 QPushButton:hover {
-    background-color: #4a6278;
+    background-color: #5b6078; /* surface2 */
 }
 
 /* === INPUT FIELDS === */
 QLineEdit {
-    background-color: #2c3e50;
-    color: #ecf0f1;
-    border: 1px solid #34495e;
+    background-color: #363a4f; /* surface0 */
+    color: #cad3f5; /* text */
+    border: 1px solid #494d64; /* surface1 */
     border-radius: 8px;
-    padding: 10px;
+    padding: 12px;
     font-size: 11pt;
 }
 
 QLineEdit:focus {
-    border: 1px solid #1abc9c;
+    border: 1px solid #89b4fa; /* blue */
+    background-color: #494d64; /* surface1 */
 }
 
-/* === GROUP BOXES === */
+/* === GROUP BOXES (Cards) === */
 QGroupBox {
-    color: #ecf0f1;
-    font: italic 14pt &quot;Segoe UI&quot;;
-    border: 1px solid #34495e;
-    border-radius: 8px;
-    margin-top: 20px;
+    font: bold 14pt &quot;Segoe UI&quot;;
+    background-color: #363a4f; /* surface0 */
+    border: 1px solid #494d64; /* surface1 */
+    border-radius: 12px;
+    margin-top: 15px;
+    padding: 15px;
+    padding-top: 35px;
 }
 
 QGroupBox::title {
-    subcontrol-origin: margin;
+    subcontrol-origin: padding;
     subcontrol-position: top center;
-    padding: 5px 10px;
-    background-color: #34495e;
-    border-radius: 8px;
+    padding: 5px 15px;
+    color: #cad3f5;
 }
 
 /* === OTHER WIDGETS === */
-QCheckBox {
-    color: #ecf0f1;
+QRadioButton, QCheckBox {
+    color: #cad3f5;
     font-size: 10pt;
+    padding: 5px;
 }
-QRadioButton {
-    color: #ecf0f1;
-    font-size: 10pt;
+QRadioButton::indicator, QCheckBox::indicator {
+    width: 15px;
+    height: 15px;
+    border-radius: 4px;
+    border: 1px solid #89b4fa;
+    background-color: #363a4f;
+}
+QCheckBox::indicator:checked {
+    background-color: #89b4fa;
+    image: url(:/i18n/check.svg); /* You need to add a checkmark icon to your resources for this to work */
+}
+QRadioButton::indicator:checked {
+	background-color: #89b4fa;
 }
 
 QListWidget {
-    background-color: #34495e;
-    border: none;
+    background-color: #363a4f;
+    border: 1px solid #494d64;
     border-radius: 8px;
-    color: #ecf0f1;
+    color: #cad3f5;
     font-size: 12pt;
+    padding: 5px;
 }
-</string>
+
+QListWidget::item:hover {
+    background-color: #494d64;
+}
+QListWidget::item:selected {
+    background-color: #89b4fa;
+    color: #24273a;
+}
+
+QMessageBox {
+    background-color: #363a4f;
+}
+QMessageBox QLabel {
+    color: #cad3f5;
+    font-size: 11pt;
+}
+QMessageBox QPushButton {
+    background-color: #89b4fa;
+    color: #24273a;
+    border-radius: 5px;
+    padding: 8px;
+    min-width: 70px;
+    font-size: 10pt;
+}
+QMessageBox QPushButton:hover {
+    background-color: #a6e3a1;
+}
+   </string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QStackedWidget" name="stackedWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>3</number>
      </property>
      <widget class="QWidget" name="page_0_login">
-      <layout class="QVBoxLayout" name="verticalLayout_2">
+      <layout class="QVBoxLayout" name="verticalLayout_2" stretch="1,0,1">
        <item>
-        <widget class="QLabel" name="gameNameLabelPage0">
-         <property name="text">
-          <string>Tic Tac Toe</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignmentFlag::AlignCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <spacer name="verticalSpacer">
-         <property name="orientation">
-          <enum>Qt::Orientation::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
+        <layout class="QVBoxLayout" name="verticalLayout_15">
+         <item>
+          <spacer name="verticalSpacer">
+           <property name="orientation">
+            <enum>Qt::Orientation::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QLabel" name="gameNameLabelPage0">
+           <property name="text">
+            <string>Tic Tac Toe</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignBottom|Qt::AlignmentFlag::AlignHCenter</set>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout">
@@ -224,30 +323,44 @@ QListWidget {
             <item>
              <widget class="QLineEdit" name="loginUsernameLineEdit">
               <property name="placeholderText">
-               <string>Username</string>
+               <string>Username or Email</string>
               </property>
              </widget>
             </item>
             <item>
-             <layout class="QHBoxLayout" name="loginPassLayout">
+             <widget class="QLineEdit" name="loginPasswordLineEdit">
+              <property name="echoMode">
+               <enum>QLineEdit::EchoMode::Password</enum>
+              </property>
+              <property name="placeholderText">
+               <string>Password</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_15">
               <item>
-               <widget class="QLineEdit" name="loginPasswordLineEdit">
-                <property name="echoMode">
-                 <enum>QLineEdit::EchoMode::Password</enum>
-                </property>
-                <property name="placeholderText">
-                 <string>Password</string>
+               <widget class="QPushButton" name="noWorriesButton">
+                <property name="text">
+                 <string>Forgot Password?</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QCheckBox" name="showLoginPasswordCheckBox">
+               <widget class="QPushButton" name="showLoginPasswordButton">
                 <property name="text">
-                 <string>Show</string>
+                 <string>Show Password</string>
                 </property>
                </widget>
               </item>
              </layout>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="rememberMeCheckBox">
+              <property name="text">
+               <string>Remember Me</string>
+              </property>
+             </widget>
             </item>
             <item>
              <widget class="QPushButton" name="loginButton">
@@ -265,13 +378,6 @@ QListWidget {
               </property>
               <property name="default">
                <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="noWorriesButton">
-              <property name="text">
-               <string>Forgot Password?</string>
               </property>
              </widget>
             </item>
@@ -294,68 +400,96 @@ QListWidget {
         </layout>
        </item>
        <item>
-        <spacer name="verticalSpacer_2">
-         <property name="orientation">
-          <enum>Qt::Orientation::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <layout class="QVBoxLayout" name="verticalLayout_16">
          <item>
-          <widget class="QLabel" name="signupLoginPageLabel">
-           <property name="text">
-            <string>Don't have an account?</string>
+          <spacer name="verticalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Orientation::Vertical</enum>
            </property>
-           <property name="alignment">
-            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
            </property>
-          </widget>
+          </spacer>
          </item>
          <item>
-          <widget class="QPushButton" name="signupLoginPageButton">
-           <property name="text">
-            <string>Sign Up!</string>
-           </property>
-          </widget>
+          <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <item>
+            <spacer name="horizontalSpacer_26">
+             <property name="orientation">
+              <enum>Qt::Orientation::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QLabel" name="signupLoginPageLabel">
+             <property name="text">
+              <string>Don't have an account?</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="signupLoginPageButton">
+             <property name="text">
+              <string>Sign Up!</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_27">
+             <property name="orientation">
+              <enum>Qt::Orientation::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
          </item>
         </layout>
        </item>
       </layout>
      </widget>
      <widget class="QWidget" name="page_1_main">
-      <layout class="QVBoxLayout" name="verticalLayout_4">
+      <layout class="QVBoxLayout" name="verticalLayout_4" stretch="1,0,0,1">
        <item>
-        <widget class="QLabel" name="gameNameLabelPage1">
-         <property name="text">
-          <string>Tic Tac Toe</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignmentFlag::AlignCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <spacer name="verticalSpacer_3">
-         <property name="orientation">
-          <enum>Qt::Orientation::Vertical</enum>
-         </property>
-         <property name="sizeType">
-          <enum>QSizePolicy::Policy::Expanding</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
+        <layout class="QVBoxLayout" name="verticalLayout_18">
+         <item>
+          <spacer name="verticalSpacer_3">
+           <property name="orientation">
+            <enum>Qt::Orientation::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QLabel" name="gameNameLabelPage1">
+           <property name="text">
+            <string>Tic Tac Toe</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignBottom|Qt::AlignmentFlag::AlignHCenter</set>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_3">
@@ -398,27 +532,6 @@ QListWidget {
                  <string>Player Vs AI</string>
                 </property>
                </widget>
-              </item>
-              <item>
-               <layout class="QVBoxLayout" name="verticalLayout_6">
-                <item>
-                 <widget class="QRadioButton" name="easyRadioButton">
-                  <property name="text">
-                   <string>Easy</string>
-                  </property>
-                  <property name="checked">
-                   <bool>true</bool>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QRadioButton" name="hardRadioButton">
-                  <property name="text">
-                   <string>Hard</string>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
               </item>
              </layout>
             </item>
@@ -519,20 +632,21 @@ QListWidget {
         </layout>
        </item>
        <item>
-        <spacer name="verticalSpacer_4">
-         <property name="orientation">
-          <enum>Qt::Orientation::Vertical</enum>
-         </property>
-         <property name="sizeType">
-          <enum>QSizePolicy::Policy::Expanding</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
+        <layout class="QVBoxLayout" name="verticalLayout_17">
+         <item>
+          <spacer name="verticalSpacer_4">
+           <property name="orientation">
+            <enum>Qt::Orientation::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
        </item>
       </layout>
      </widget>
@@ -849,29 +963,33 @@ QListWidget {
       </layout>
      </widget>
      <widget class="QWidget" name="page_2_signup">
-      <layout class="QVBoxLayout" name="verticalLayout_9">
+      <layout class="QVBoxLayout" name="verticalLayout_9" stretch="1,0,1">
        <item>
-        <widget class="QLabel" name="gameNameLabelPage_5">
-         <property name="text">
-          <string>Tic Tac Toe</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignmentFlag::AlignCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <spacer name="verticalSpacer_5">
-         <property name="orientation">
-          <enum>Qt::Orientation::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
+        <layout class="QVBoxLayout" name="verticalLayout_22">
+         <item>
+          <spacer name="verticalSpacer_5">
+           <property name="orientation">
+            <enum>Qt::Orientation::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QLabel" name="gameNameLabelPage_2">
+           <property name="text">
+            <string>Tic Tac Toe</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignBottom|Qt::AlignmentFlag::AlignHCenter</set>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_8">
@@ -890,10 +1008,33 @@ QListWidget {
          </item>
          <item>
           <widget class="QGroupBox" name="signupGroupBox">
+           <property name="minimumSize">
+            <size>
+             <width>400</width>
+             <height>0</height>
+            </size>
+           </property>
            <property name="title">
             <string notr="true">Sign Up!</string>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_10">
+            <property name="spacing">
+             <number>15</number>
+            </property>
+            <item>
+             <widget class="QLineEdit" name="signupFirstNameLineEdit">
+              <property name="placeholderText">
+               <string>First Name</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="signupLastNameLineEdit">
+              <property name="placeholderText">
+               <string>Last Name</string>
+              </property>
+             </widget>
+            </item>
             <item>
              <widget class="QLineEdit" name="signupUsernameLineEdit">
               <property name="placeholderText">
@@ -902,39 +1043,45 @@ QListWidget {
              </widget>
             </item>
             <item>
-             <layout class="QHBoxLayout" name="signupPassLayout">
+             <widget class="QLineEdit" name="signupEmailLineEdit">
+              <property name="placeholderText">
+               <string>Email *</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="signupPasswordLineEdit">
+              <property name="echoMode">
+               <enum>QLineEdit::EchoMode::Password</enum>
+              </property>
+              <property name="placeholderText">
+               <string>Password *</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_20">
               <item>
-               <widget class="QLineEdit" name="signupPasswordLineEdit">
-                <property name="echoMode">
-                 <enum>QLineEdit::EchoMode::Password</enum>
+               <spacer name="horizontalSpacer_30">
+                <property name="orientation">
+                 <enum>Qt::Orientation::Horizontal</enum>
                 </property>
-                <property name="placeholderText">
-                 <string>Password *</string>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
                 </property>
-               </widget>
+               </spacer>
               </item>
               <item>
-               <widget class="QCheckBox" name="showSignupPasswordCheckBox">
+               <widget class="QPushButton" name="showSignupPasswordButton">
                 <property name="text">
-                 <string>Show</string>
+                 <string>Show Password</string>
                 </property>
                </widget>
               </item>
              </layout>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="signupFirstNameLineEdit">
-              <property name="placeholderText">
-               <string>First Name (Optional)</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="signupLastNameLineEdit">
-              <property name="placeholderText">
-               <string>Last Name (Optional)</string>
-              </property>
-             </widget>
             </item>
             <item>
              <widget class="QPushButton" name="registerButton">
@@ -968,65 +1115,96 @@ QListWidget {
         </layout>
        </item>
        <item>
-        <spacer name="verticalSpacer_6">
-         <property name="orientation">
-          <enum>Qt::Orientation::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_9">
+        <layout class="QVBoxLayout" name="verticalLayout_23">
          <item>
-          <widget class="QLabel" name="existingAccountLabel">
-           <property name="text">
-            <string>Already have an account?</string>
+          <spacer name="verticalSpacer_6">
+           <property name="orientation">
+            <enum>Qt::Orientation::Vertical</enum>
            </property>
-           <property name="alignment">
-            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
            </property>
-          </widget>
+          </spacer>
          </item>
          <item>
-          <widget class="QPushButton" name="loginButtonSignupPage">
-           <property name="text">
-            <string>Log In!</string>
-           </property>
-          </widget>
+          <layout class="QHBoxLayout" name="horizontalLayout_9">
+           <item>
+            <spacer name="horizontalSpacer_28">
+             <property name="orientation">
+              <enum>Qt::Orientation::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QLabel" name="existingAccountLabel">
+             <property name="text">
+              <string>Already have an account?</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="loginButtonSignupPage">
+             <property name="text">
+              <string>Log In!</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_29">
+             <property name="orientation">
+              <enum>Qt::Orientation::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
          </item>
         </layout>
        </item>
       </layout>
      </widget>
      <widget class="QWidget" name="page_3_password_reset">
-      <layout class="QVBoxLayout" name="verticalLayout_11">
+      <layout class="QVBoxLayout" name="verticalLayout_11" stretch="1,0,1,0">
        <item>
-        <widget class="QLabel" name="gameNameLabelPage_6">
-         <property name="text">
-          <string>Tic Tac Toe</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignmentFlag::AlignCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <spacer name="verticalSpacer_7">
-         <property name="orientation">
-          <enum>Qt::Orientation::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
+        <layout class="QVBoxLayout" name="verticalLayout_24">
+         <item>
+          <spacer name="verticalSpacer_7">
+           <property name="orientation">
+            <enum>Qt::Orientation::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QLabel" name="gameNameLabelPage_6">
+           <property name="text">
+            <string>Tic Tac Toe</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignBottom|Qt::AlignmentFlag::AlignHCenter</set>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_10">
@@ -1045,10 +1223,19 @@ QListWidget {
          </item>
          <item>
           <widget class="QGroupBox" name="groupBox_2">
+           <property name="minimumSize">
+            <size>
+             <width>400</width>
+             <height>0</height>
+            </size>
+           </property>
            <property name="title">
             <string>Password Reset</string>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_12">
+            <property name="spacing">
+             <number>15</number>
+            </property>
             <item>
              <widget class="QLineEdit" name="resetUsernameLineEdit">
               <property name="placeholderText">
@@ -1057,25 +1244,14 @@ QListWidget {
              </widget>
             </item>
             <item>
-             <layout class="QHBoxLayout" name="resetPassLayout">
-              <item>
-               <widget class="QLineEdit" name="resetNewPasswordLineEdit">
-                <property name="echoMode">
-                 <enum>QLineEdit::EchoMode::Password</enum>
-                </property>
-                <property name="placeholderText">
-                 <string>New Password *</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QCheckBox" name="showResetNewPasswordCheckBox">
-                <property name="text">
-                 <string>Show</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
+             <widget class="QLineEdit" name="resetNewPasswordLineEdit">
+              <property name="echoMode">
+               <enum>QLineEdit::EchoMode::Password</enum>
+              </property>
+              <property name="placeholderText">
+               <string>New Password *</string>
+              </property>
+             </widget>
             </item>
             <item>
              <widget class="QLineEdit" name="resetConfirmPasswordLineEdit">
@@ -1088,7 +1264,20 @@ QListWidget {
              </widget>
             </item>
             <item>
+             <widget class="QPushButton" name="showResetPasswordButton">
+              <property name="text">
+               <string>Show Passwords</string>
+              </property>
+             </widget>
+            </item>
+            <item>
              <widget class="QPushButton" name="resetPasswordButton">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>45</height>
+               </size>
+              </property>
               <property name="text">
                <string>Reset Password</string>
               </property>
@@ -1126,20 +1315,50 @@ QListWidget {
         </spacer>
        </item>
        <item>
-        <widget class="QPushButton" name="backButtonReset">
-         <property name="text">
-          <string>Back to Login</string>
-         </property>
-        </widget>
+        <layout class="QHBoxLayout" name="horizontalLayout_17">
+         <item>
+          <spacer name="horizontalSpacer_22">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QPushButton" name="backButtonReset">
+           <property name="text">
+            <string>Back to Login</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_23">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
        </item>
       </layout>
      </widget>
      <widget class="QWidget" name="page_4_personal_info">
-      <layout class="QVBoxLayout" name="verticalLayout_13">
+      <layout class="QVBoxLayout" name="verticalLayout_13" stretch="0,1,0,1,0">
        <item>
-        <widget class="QLabel" name="gameNameLabelPage_7">
+        <widget class="QLabel" name="myAccountTitleLabel">
          <property name="text">
-          <string>Tic Tac Toe</string>
+          <string>My Account</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -1150,6 +1369,9 @@ QListWidget {
         <spacer name="verticalSpacer_9">
          <property name="orientation">
           <enum>Qt::Orientation::Vertical</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Policy::Expanding</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
@@ -1176,10 +1398,19 @@ QListWidget {
          </item>
          <item>
           <widget class="QGroupBox" name="groupBox_7">
+           <property name="minimumSize">
+            <size>
+             <width>450</width>
+             <height>0</height>
+            </size>
+           </property>
            <property name="title">
             <string>Personal Info</string>
            </property>
            <layout class="QFormLayout" name="formLayout">
+            <property name="verticalSpacing">
+             <number>15</number>
+            </property>
             <item row="0" column="0">
              <widget class="QLabel" name="accountFirstNameLabel_2">
               <property name="text">
@@ -1222,6 +1453,36 @@ QListWidget {
               </property>
              </widget>
             </item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="accountEmailLabel_2">
+              <property name="text">
+               <string>Email:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QLabel" name="accountEmailLabel">
+              <property name="text">
+               <string>N/A</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="0" colspan="2">
+             <widget class="QPushButton" name="changePasswordButton">
+              <property name="text">
+               <string>Change Password</string>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>0</width>
+                <height>4</height>
+               </size>
+              </property>
+              <property name="autoDefault">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
            </layout>
           </widget>
          </item>
@@ -1241,16 +1502,12 @@ QListWidget {
         </layout>
        </item>
        <item>
-        <widget class="QPushButton" name="changePasswordButton">
-         <property name="text">
-          <string>Change Password</string>
-         </property>
-        </widget>
-       </item>
-       <item>
         <spacer name="verticalSpacer_10">
          <property name="orientation">
           <enum>Qt::Orientation::Vertical</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Policy::Expanding</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
@@ -1345,6 +1602,166 @@ QListWidget {
        </item>
        <item>
         <widget class="QListWidget" name="gameHistoryListWidget"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="page_ai_difficulty_selection">
+      <layout class="QVBoxLayout" name="verticalLayout_21" stretch="1,0,0,1">
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout_19">
+         <item>
+          <spacer name="verticalSpacer_11">
+           <property name="orientation">
+            <enum>Qt::Orientation::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QLabel" name="aiDifficultyLabel">
+           <property name="text">
+            <string>AI Difficulty</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignBottom|Qt::AlignmentFlag::AlignHCenter</set>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_14">
+         <item>
+          <spacer name="horizontalSpacer_18">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="aiDifficultyGroupBox">
+           <property name="title">
+            <string>Select Difficulty</string>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_20">
+            <property name="spacing">
+             <number>20</number>
+            </property>
+            <item>
+             <widget class="QRadioButton" name="easyRadioButton_2">
+              <property name="text">
+               <string>Easy</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="mediumRadioButton">
+              <property name="text">
+               <string>Medium</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="hardRadioButton_2">
+              <property name="text">
+               <string>Hard</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="startGameButton">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>50</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>Start Game</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_19">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_16">
+         <item>
+          <spacer name="horizontalSpacer_20">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QPushButton" name="backButtonAiPage">
+           <property name="text">
+            <string>Back</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_21">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_12">
+         <property name="orientation">
+          <enum>Qt::Orientation::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </widget>
