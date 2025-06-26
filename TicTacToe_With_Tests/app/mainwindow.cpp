@@ -1,24 +1,22 @@
 #include "mainwindow.h"
-#include "ui_mainwindow.h" // Essential: This header defines Ui::MainWindow
+#include "ui_mainwindow.h"
 
-// Include custom classes
 #include "DatabaseManager.h"
 #include "gamelogic.h"
-    #include "board.h" // For Board::PLAYER_X, Board::PLAYER_O constants
+#include "board.h"
 #include "messagebox.h"
 
-// Standard Qt headers
 #include <QMessageBox>
 #include <QRandomGenerator>
 #include <QDateTime>
 #include <QDebug>
-#include <QCheckBox>
 #include <QPushButton>
 #include <QListWidgetItem>
-#include <QSettings> // Required for persistent session management
-#include <QTimer>    // Use QTimer for delayed, safe UI updates
+#include <QSettings>
+#include <QTimer>
+#include <QIcon>
 
-
+// --- MODIFIED: CONSTRUCTOR NOW HANDLES AUTO-LOGIN ---
 MainWindow::MainWindow(QWidget *parent)
     : QWidget(parent),
     ui(new Ui::MainWindow),
@@ -26,7 +24,7 @@ MainWindow::MainWindow(QWidget *parent)
     replayIndex(0),
     isMessageBoxActive(false),
     m_loginInProgress(false),
-    m_isReplayMode(false) // *FIX: Initialize replay mode flag*
+    m_isReplayMode(false)
 {
     ui->setupUi(this);
 
@@ -35,28 +33,30 @@ MainWindow::MainWindow(QWidget *parent)
 
     setupConnections();
 
-    ui->hardRadioButton->setChecked(true); // Default to hard AI difficulty
-
-    // --- Persistent Session Management: Check for auto-login ---
+    // Check for a remembered user to auto-login
     QSettings settings("YourCompanyName", "TicTacToe");
-    QString savedUsername = settings.value("lastLoggedInUser").toString();
+    QString autoLoginUser = settings.value("rememberedIdentifier").toString();
 
-    if (!savedUsername.isEmpty()) {
-        currentUser = savedUsername;
-        ui->stackedWidget->setCurrentWidget(ui->page_1_main);
+    if (!autoLoginUser.isEmpty()) {
+        // If a user is remembered, log them in automatically
+        QVariantMap userInfo = dbManager->getUserInfo(autoLoginUser);
+        currentUser = userInfo["username"].toString();
 
-        QString welcomeMessage = "Welcome back, " + savedUsername + "!";
+        ui->stackedWidget->setCurrentWidget(ui->page_1_main); // Go directly to the main page
 
+        // Show a welcome message after a short delay
+        QString welcomeMessage = "Welcome back, " + currentUser + "!";
         QTimer::singleShot(100, this, [this, welcomeMessage]() {
             if (isMessageBoxActive) return;
             isMessageBoxActive = true;
-            Utils::showStyledMessageBox(this, "Auto-Login Successful", welcomeMessage);
+            Utils::showStyledMessageBox(this, "Login Successful", welcomeMessage);
             isMessageBoxActive = false;
         });
+
     } else {
+        // Otherwise, show the login page as normal
         ui->stackedWidget->setCurrentWidget(ui->page_0_login);
     }
-    // --- End Persistent Session Management ---
 }
 
 MainWindow::~MainWindow()
@@ -66,35 +66,35 @@ MainWindow::~MainWindow()
 
 void MainWindow::setupConnections()
 {
-    // Connections are correct, no changes needed here.
-    // --- Login Page Connections ---
+    // --- Password Visibility Connections ---
+    connect(ui->showLoginPasswordButton, &QPushButton::clicked, this, &MainWindow::handleShowPassword);
+    connect(ui->showSignupPasswordButton, &QPushButton::clicked, this, &MainWindow::handleShowPassword);
+    connect(ui->showResetPasswordButton, &QPushButton::clicked, this, &MainWindow::handleShowPassword);
+
+    // --- Page Navigation and Actions ---
     connect(ui->loginButton, &QPushButton::clicked, this, &MainWindow::on_loginButton_clicked);
     connect(ui->signupLoginPageButton, &QPushButton::clicked, this, &MainWindow::on_signupLoginPageButton_clicked);
-    connect(ui->showLoginPasswordCheckBox, &QCheckBox::toggled, this, &MainWindow::on_showLoginPasswordCheckBox_toggled);
     connect(ui->noWorriesButton, &QPushButton::clicked, this, &MainWindow::on_noWorriesButton_clicked);
-
-    // --- Sign-Up Page Connections ---
     connect(ui->registerButton, &QPushButton::clicked, this, &MainWindow::on_registerButton_clicked);
-    connect(ui->showSignupPasswordCheckBox, &QCheckBox::toggled, this, &MainWindow::on_showSignupPasswordCheckBox_toggled);
     connect(ui->loginButtonSignupPage, &QPushButton::clicked, this, &MainWindow::on_loginButtonSignupPage_clicked);
-
-    // --- Main Page Connections ---
     connect(ui->playerVsAiButton, &QPushButton::clicked, this, &MainWindow::on_playerVsAiButton_clicked);
     connect(ui->playerVsPlayerButton, &QPushButton::clicked, this, &MainWindow::on_playerVsPlayerButton_clicked);
     connect(ui->myAccountButton, &QPushButton::clicked, this, &MainWindow::on_myAccountButton_clicked);
     connect(ui->myGameHistoryButton, &QPushButton::clicked, this, &MainWindow::on_myGameHistoryButton_clicked);
-
-    // --- Password Reset Page Connections ---
     connect(ui->resetPasswordButton, &QPushButton::clicked, this, &MainWindow::on_resetPasswordButton_clicked);
-    connect(ui->showResetNewPasswordCheckBox, &QCheckBox::toggled, this, &MainWindow::on_showResetNewPasswordCheckBox_toggled);
     connect(ui->backButtonReset, &QPushButton::clicked, this, &MainWindow::on_backButtonReset_clicked);
-
-    // --- Personal Info Page Connections ---
     connect(ui->backButtonAccount, &QPushButton::clicked, this, &MainWindow::on_backButtonAccount_clicked);
     connect(ui->changePasswordButton, &QPushButton::clicked, this, &MainWindow::on_changePasswordButton_clicked);
     connect(ui->logoutButtonAccount, &QPushButton::clicked, this, &MainWindow::on_logoutButtonAccount_clicked);
+    connect(ui->startGameButton, &QPushButton::clicked, this, &MainWindow::on_startGameButton_clicked);
+    connect(ui->backButtonAiPage, &QPushButton::clicked, this, &MainWindow::on_backButtonAiPage_clicked);
+    connect(ui->resetGameboardButton, &QPushButton::clicked, this, &MainWindow::on_resetGameboardButton_clicked);
+    connect(ui->backButtonGamePage, &QPushButton::clicked, this, &MainWindow::on_backButtonGamePage_clicked);
+    connect(ui->replayGameButton, &QPushButton::clicked, this, &MainWindow::on_replayGameButton_clicked);
+    connect(ui->deleteGameButton, &QPushButton::clicked, this, &MainWindow::on_deleteGameButton_clicked);
+    connect(ui->backButtonHistory, &QPushButton::clicked, this, &MainWindow::on_backButtonHistory_clicked);
 
-    // --- Game Board Page Connections ---
+    // --- Game Board Button Connections ---
     connect(ui->pushButton_00, &QPushButton::clicked, this, &MainWindow::handleBoardClick);
     connect(ui->pushButton_01, &QPushButton::clicked, this, &MainWindow::handleBoardClick);
     connect(ui->pushButton_02, &QPushButton::clicked, this, &MainWindow::handleBoardClick);
@@ -104,109 +104,137 @@ void MainWindow::setupConnections()
     connect(ui->pushButton_20, &QPushButton::clicked, this, &MainWindow::handleBoardClick);
     connect(ui->pushButton_21, &QPushButton::clicked, this, &MainWindow::handleBoardClick);
     connect(ui->pushButton_22, &QPushButton::clicked, this, &MainWindow::handleBoardClick);
-    connect(ui->resetGameboardButton, &QPushButton::clicked, this, &MainWindow::on_resetGameboardButton_clicked);
-    connect(ui->backButtonGamePage, &QPushButton::clicked, this, &MainWindow::on_backButtonGamePage_clicked);
 
-    // --- Game History Page Connections ---
-    connect(ui->replayGameButton, &QPushButton::clicked, this, &MainWindow::on_replayGameButton_clicked);
-    connect(ui->deleteGameButton, &QPushButton::clicked, this, &MainWindow::on_deleteGameButton_clicked);
-    connect(ui->backButtonHistory, &QPushButton::clicked, this, &MainWindow::on_backButtonHistory_clicked);
-
-    // --- Replay Timer Connection ---
-    connect(replayTimer, &QTimer::timeout, this, &MainWindow::replayNextMove);
-
-    // Connect GameLogic signals to MainWindow slots
+    // --- GameLogic Signal Connections ---
     connect(gameLogic, &GameLogic::boardChanged, this, &MainWindow::onBoardChanged);
     connect(gameLogic, &GameLogic::gameEnded, this, &MainWindow::onGameEnded);
     connect(gameLogic, &GameLogic::currentPlayerChanged, this, &MainWindow::onCurrentPlayerChanged);
+
+    // --- Replay Timer Connection ---
+    connect(replayTimer, &QTimer::timeout, this, &MainWindow::replayNextMove);
+}
+
+void MainWindow::handleShowPassword()
+{
+    QPushButton *button = qobject_cast<QPushButton*>(sender());
+    if (!button) return;
+
+    QString buttonName = button->objectName();
+    QList<QLineEdit*> targetFields;
+
+    if (buttonName == "showLoginPasswordButton") {
+        targetFields.append(this->findChild<QLineEdit*>("loginPasswordLineEdit"));
+    } else if (buttonName == "showSignupPasswordButton") {
+        targetFields.append(this->findChild<QLineEdit*>("signupPasswordLineEdit"));
+    } else if (buttonName == "showResetPasswordButton") {
+        targetFields.append(this->findChild<QLineEdit*>("resetNewPasswordLineEdit"));
+        targetFields.append(this->findChild<QLineEdit*>("resetConfirmPasswordLineEdit"));
+    }
+
+    if (targetFields.isEmpty() || !targetFields.first()) return;
+
+    bool showPassword = (targetFields.first()->echoMode() == QLineEdit::Password);
+    for (QLineEdit* lineEdit : targetFields) {
+        if (lineEdit) {
+            lineEdit->setEchoMode(showPassword ? QLineEdit::Normal : QLineEdit::Password);
+        }
+    }
+
+    if (buttonName == "showResetPasswordButton") {
+        button->setText(showPassword ? "Hide Passwords" : "Show Passwords");
+    } else {
+        button->setText(showPassword ? "Hide Password" : "Show Password");
+    }
+}
+
+void MainWindow::on_registerButton_clicked()
+{
+    QString username = ui->signupUsernameLineEdit->text();
+    QString password = ui->signupPasswordLineEdit->text();
+    QString email = ui->signupEmailLineEdit->text();
+    QString firstName = ui->signupFirstNameLineEdit->text();
+    QString lastName = ui->signupLastNameLineEdit->text();
+
+    if (username.isEmpty() || password.isEmpty() || email.isEmpty()) {
+        Utils::showStyledMessageBox(this, "Signup Failed", "Username, Email, and Password are required.", true);
+        return;
+    }
+
+    if (dbManager->registerUser(username, password, email, firstName, lastName)) {
+        Utils::showStyledMessageBox(this, "Success!", "Your account has been created. You can now log in.");
+        ui->stackedWidget->setCurrentWidget(ui->page_0_login);
+
+        ui->signupUsernameLineEdit->clear();
+        ui->signupPasswordLineEdit->clear();
+        ui->signupEmailLineEdit->clear();
+        ui->signupFirstNameLineEdit->clear();
+        ui->signupLastNameLineEdit->clear();
+    } else {
+        Utils::showStyledMessageBox(this, "Signup Failed", "This username or email may already be taken. Please try again.", true);
+    }
 }
 
 void MainWindow::on_loginButton_clicked() {
-    if (m_loginInProgress) {
-        return;
-    }
+    if (m_loginInProgress) return;
     m_loginInProgress = true;
     ui->loginButton->setEnabled(false);
 
-    QString username = ui->loginUsernameLineEdit->text();
+    QString usernameOrEmail = ui->loginUsernameLineEdit->text();
     QString password = ui->loginPasswordLineEdit->text();
 
-    if (username.isEmpty() || password.isEmpty()) {
-        Utils::showStyledMessageBox(this, "Login Failed", "Please enter both username and password.", true);
+    if (usernameOrEmail.isEmpty() || password.isEmpty()) {
+        Utils::showStyledMessageBox(this, "Login Failed", "Please enter your identifier and password.", true);
         ui->loginButton->setEnabled(true);
         m_loginInProgress = false;
         return;
     }
 
-    if (dbManager->authenticateUser(username, password)) {
-        currentUser = username;
+    if (dbManager->authenticateUser(usernameOrEmail, password)) {
+        QVariantMap userInfo = dbManager->getUserInfo(usernameOrEmail);
+        currentUser = userInfo["username"].toString();
+
+        QSettings settings("YourCompanyName", "TicTacToe");
+        if (ui->rememberMeCheckBox->isChecked()) {
+            settings.setValue("rememberedIdentifier", usernameOrEmail);
+        } else {
+            settings.remove("rememberedIdentifier");
+        }
+
         ui->stackedWidget->setCurrentWidget(ui->page_1_main);
-        ui->loginUsernameLineEdit->clear();
         ui->loginPasswordLineEdit->clear();
 
-        QString welcomeMessage = "Welcome, " + username + "!";
-
+        QString welcomeMessage = "Welcome, " + currentUser + "!";
         QTimer::singleShot(100, this, [this, welcomeMessage]() {
             if (isMessageBoxActive) return;
             isMessageBoxActive = true;
             Utils::showStyledMessageBox(this, "Login Successful", welcomeMessage);
             isMessageBoxActive = false;
         });
-
-        QSettings settings("YourCompanyName", "TicTacToe");
-        settings.setValue("lastLoggedInUser", username);
-
     } else {
-        Utils::showStyledMessageBox(this, "Login Failed", "Invalid username or password.", true);
-        ui->loginUsernameLineEdit->clear();
+        Utils::showStyledMessageBox(this, "Login Failed", "Invalid identifier or password.", true);
         ui->loginPasswordLineEdit->clear();
+    }
+
+    QTimer::singleShot(500, this, [this](){
         ui->loginButton->setEnabled(true);
         m_loginInProgress = false;
-    }
+    });
+}
+
+void MainWindow::updateAccountInfoUI(const QVariantMap& userInfo) {
+    ui->accountFirstNameLabel->setText(userInfo["firstName"].toString());
+    ui->accountLastNameLabel->setText(userInfo["lastName"].toString());
+    ui->accountUsernameLabel->setText(userInfo["username"].toString());
+    ui->accountEmailLabel->setText(userInfo["email"].toString());
 }
 
 void MainWindow::on_signupLoginPageButton_clicked() {
     ui->stackedWidget->setCurrentWidget(ui->page_2_signup);
     ui->signupUsernameLineEdit->clear();
     ui->signupPasswordLineEdit->clear();
+    ui->signupEmailLineEdit->clear();
     ui->signupFirstNameLineEdit->clear();
     ui->signupLastNameLineEdit->clear();
-    ui->showSignupPasswordCheckBox->setChecked(false);
-}
-
-void MainWindow::on_registerButton_clicked() {
-    QString username = ui->signupUsernameLineEdit->text();
-    QString password = ui->signupPasswordLineEdit->text();
-    QString firstName = ui->signupFirstNameLineEdit->text();
-    QString lastName = ui->signupLastNameLineEdit->text();
-
-    if (username.isEmpty() || password.isEmpty()) {
-        Utils::showStyledMessageBox(this, "Signup Failed", "Username and Password are required.", true);
-        return;
-    }
-
-    if (dbManager->registerUser(username, password, firstName, lastName)) {
-        ui->stackedWidget->setCurrentWidget(ui->page_0_login);
-        ui->signupUsernameLineEdit->clear();
-        ui->signupPasswordLineEdit->clear();
-        ui->signupFirstNameLineEdit->clear();
-        ui->signupLastNameLineEdit->clear();
-        ui->showSignupPasswordCheckBox->setChecked(false);
-
-        QTimer::singleShot(100, this, [this]() {
-            if (isMessageBoxActive) return;
-            isMessageBoxActive = true;
-            Utils::showStyledMessageBox(this, "Signup Successful", "You have been registered.");
-            isMessageBoxActive = false;
-        });
-    } else {
-        Utils::showStyledMessageBox(this, "Signup Failed", "Could not register user. Username might already exist.", true);
-        ui->signupUsernameLineEdit->clear();
-        ui->signupPasswordLineEdit->clear();
-        ui->signupFirstNameLineEdit->clear();
-        ui->signupLastNameLineEdit->clear();
-        ui->showSignupPasswordCheckBox->setChecked(false);
-    }
 }
 
 void MainWindow::on_loginButtonSignupPage_clicked()
@@ -219,7 +247,6 @@ void MainWindow::on_noWorriesButton_clicked() {
     ui->resetUsernameLineEdit->clear();
     ui->resetNewPasswordLineEdit->clear();
     ui->resetConfirmPasswordLineEdit->clear();
-    ui->showResetNewPasswordCheckBox->setChecked(false);
 }
 
 void MainWindow::on_resetPasswordButton_clicked() {
@@ -241,7 +268,6 @@ void MainWindow::on_resetPasswordButton_clicked() {
         ui->resetUsernameLineEdit->clear();
         ui->resetNewPasswordLineEdit->clear();
         ui->resetConfirmPasswordLineEdit->clear();
-        ui->showResetNewPasswordCheckBox->setChecked(false);
 
         QTimer::singleShot(100, this, [this]() {
             if (isMessageBoxActive) return;
@@ -254,25 +280,7 @@ void MainWindow::on_resetPasswordButton_clicked() {
         ui->resetUsernameLineEdit->clear();
         ui->resetNewPasswordLineEdit->clear();
         ui->resetConfirmPasswordLineEdit->clear();
-        ui->showResetNewPasswordCheckBox->setChecked(false);
     }
-}
-
-void MainWindow::togglePasswordVisibility(QLineEdit* lineEdit, bool visible) {
-    lineEdit->setEchoMode(visible ? QLineEdit::Normal : QLineEdit::Password);
-}
-
-void MainWindow::on_showLoginPasswordCheckBox_toggled(bool checked) {
-    togglePasswordVisibility(ui->loginPasswordLineEdit, checked);
-}
-
-void MainWindow::on_showSignupPasswordCheckBox_toggled(bool checked) {
-    togglePasswordVisibility(ui->signupPasswordLineEdit, checked);
-}
-
-void MainWindow::on_showResetNewPasswordCheckBox_toggled(bool checked) {
-    togglePasswordVisibility(ui->resetNewPasswordLineEdit, checked);
-    togglePasswordVisibility(ui->resetConfirmPasswordLineEdit, checked);
 }
 
 void MainWindow::on_backButtonReset_clicked() {
@@ -287,55 +295,43 @@ void MainWindow::on_changePasswordButton_clicked() {
     ui->stackedWidget->setCurrentWidget(ui->page_3_password_reset);
 }
 
-void MainWindow::on_logoutButtonAccount_clicked() {
-    currentUser.clear();
+// --- MODIFIED: LOGOUT NOW CLEARS THE "REMEMBER ME" SETTING ---
+void MainWindow::on_logoutButtonAccount_clicked()
+{
     QSettings settings("YourCompanyName", "TicTacToe");
-    settings.remove("lastLoggedInUser");
+    settings.remove("rememberedIdentifier"); // Clear the auto-login setting
+
+    currentUser.clear();
     ui->stackedWidget->setCurrentWidget(ui->page_0_login);
     ui->loginButton->setEnabled(true);
     m_loginInProgress = false;
 }
 
-// *FIX: This function's logic is now updated to handle all replay reset cases.*
 void MainWindow::on_resetGameboardButton_clicked() {
-    // If we are in any kind of replay state (running or finished)
     if (m_isReplayMode) {
-        replayTimer->stop(); // Ensure timer is stopped before restarting
+        replayTimer->stop();
         replayIndex = 0;
-        resetBoardUI();      // Clears text and enables buttons for replay
-        disableGameboardUI(); // Re-disable board for replay
-        replayTimer->start(800); // Start the animation from the beginning
+        resetBoardUI();
+        disableGameboardUI();
+        replayTimer->start(800);
         ui->gameStatusLabel->setText("Replaying Game (Restarted)...");
     } else {
-        // If not in replay mode, it's a live game. Reset it.
         gameLogic->resetGame();
         resetBoardUI();
         ui->gameStatusLabel->setText("Player X's Turn");
     }
 }
 
-// *FIX: Reset replay mode when going back.*
 void MainWindow::on_backButtonGamePage_clicked() {
     if (replayTimer->isActive()) {
         replayTimer->stop();
         replayMoves.clear();
         replayIndex = 0;
     }
-    m_isReplayMode = false; // We are no longer in replay mode
+    m_isReplayMode = false;
     ui->stackedWidget->setCurrentWidget(ui->page_1_main);
 }
 
-// *FIX: Set replay mode to false for live games.*
-void MainWindow::on_playerVsAiButton_clicked() {
-    m_isReplayMode = false;
-    QString aiDifficulty = ui->easyRadioButton->isChecked() ? "easy" : "hard";
-    gameLogic->startGame(true, aiDifficulty);
-    resetBoardUI();
-    ui->gameStatusLabel->setText("Player X's Turn");
-    ui->stackedWidget->setCurrentWidget(ui->page_5_gameboard);
-}
-
-// *FIX: Set replay mode to false for live games.*
 void MainWindow::on_playerVsPlayerButton_clicked() {
     m_isReplayMode = false;
     gameLogic->startGame(false, "");
@@ -344,13 +340,40 @@ void MainWindow::on_playerVsPlayerButton_clicked() {
     ui->stackedWidget->setCurrentWidget(ui->page_5_gameboard);
 }
 
+void MainWindow::on_playerVsAiButton_clicked()
+{
+    ui->stackedWidget->setCurrentWidget(ui->page_ai_difficulty_selection);
+}
+
+void MainWindow::on_startGameButton_clicked()
+{
+    m_isReplayMode = false;
+    QString aiDifficulty;
+    if (ui->easyRadioButton_2->isChecked()) {
+        aiDifficulty = "easy";
+    } else if (ui->mediumRadioButton->isChecked()) {
+        aiDifficulty = "medium";
+    } else {
+        aiDifficulty = "hard";
+    }
+
+    gameLogic->startGame(true, aiDifficulty);
+    resetBoardUI();
+    ui->gameStatusLabel->setText("Player X's Turn");
+    ui->stackedWidget->setCurrentWidget(ui->page_5_gameboard);
+}
+
+void MainWindow::on_backButtonAiPage_clicked()
+{
+    ui->stackedWidget->setCurrentWidget(ui->page_1_main);
+}
+
 void MainWindow::handleBoardClick() {
     QPushButton *clickedButton = qobject_cast<QPushButton *>(sender());
     if (!clickedButton || !clickedButton->text().isEmpty()) {
         return;
     }
 
-    // Disallow clicks during a replay
     if (m_isReplayMode) {
         Utils::showStyledMessageBox(this, "Replay Active", "Cannot make moves during a game replay. Please use Reset or Back.", true);
         return;
@@ -368,12 +391,6 @@ void MainWindow::on_myAccountButton_clicked() {
     QVariantMap userInfo = dbManager->getUserInfo(currentUser);
     updateAccountInfoUI(userInfo);
     ui->stackedWidget->setCurrentWidget(ui->page_4_personal_info);
-}
-
-void MainWindow::updateAccountInfoUI(const QVariantMap& userInfo) {
-    ui->accountFirstNameLabel->setText(userInfo["firstName"].toString());
-    ui->accountLastNameLabel->setText(userInfo["lastName"].toString());
-    ui->accountUsernameLabel->setText(userInfo["username"].toString());
 }
 
 void MainWindow::on_myGameHistoryButton_clicked() {
@@ -437,25 +454,24 @@ void MainWindow::replayNextMove() {
         QPushButton *button = getButton(row, col);
         if(button) {
             button->setText(playerChar);
-            if(playerChar == 'X') button->setStyleSheet("color: #3498db;");
-            else button->setStyleSheet("color: #e74c3c;");
+            if(playerChar == 'X') button->setStyleSheet("color: #89b4fa;"); // Use dark theme blue
+            else button->setStyleSheet("color: #f38ba8;"); // Use dark theme red
         }
         replayIndex++;
     } else {
         replayTimer->stop();
         Utils::showStyledMessageBox(this, "Replay Finished", "The game replay has concluded.");
-        disableGameboardUI(); // Disable board to prevent clicks on squares after replay
+        disableGameboardUI();
     }
 }
 
-// *FIX: Set replay mode to true when starting a replay.*
 void MainWindow::on_replayGameButton_clicked() {
     QListWidgetItem *selectedItem = ui->gameHistoryListWidget->currentItem();
     if (selectedItem) {
         int gameId = selectedItem->data(Qt::UserRole).toInt();
         QString movesString = dbManager->getGameMoves(gameId);
         if (!movesString.isEmpty()) {
-            m_isReplayMode = true; // We are now in replay mode
+            m_isReplayMode = true;
             replayMoves = movesString.split(",");
             resetBoardUI();
             disableGameboardUI();
@@ -475,13 +491,13 @@ void MainWindow::onBoardChanged(int row, int col, int player) {
     QPushButton* button = getButton(row, col);
     if (button) {
         button->setText((player == Board::PLAYER_X) ? "X" : "O");
-        button->setStyleSheet((player == Board::PLAYER_X) ? "color: #3498db;" : "color: #e74c3c;");
+        button->setStyleSheet((player == Board::PLAYER_X) ? "color: #89b4fa;" : "color: #f38ba8;"); // Use dark theme colors
         button->setEnabled(false);
     }
 }
 
 void MainWindow::onGameEnded(const QString& winner, const QStringList& moves) {
-    if (!m_isReplayMode) { // Only show for live games
+    if (!m_isReplayMode) {
         Utils::showStyledMessageBox(this, "Game Over", winner);
         QString player2Name = gameLogic->isVsAI() ? "AI" : "Player O";
         dbManager->saveGameHistory(currentUser, player2Name, winner, moves);
@@ -490,7 +506,7 @@ void MainWindow::onGameEnded(const QString& winner, const QStringList& moves) {
 }
 
 void MainWindow::onCurrentPlayerChanged(int player) {
-    if (!m_isReplayMode) { // Only update for live games
+    if (!m_isReplayMode) {
         if (player == Board::PLAYER_X) {
             ui->gameStatusLabel->setText("Player X's Turn");
             enableGameboardUI();
@@ -527,7 +543,6 @@ void MainWindow::disableGameboardUI() {
 }
 
 void MainWindow::enableGameboardUI() {
-    // During a live game, only enable empty buttons
     if (!m_isReplayMode) {
         QList<QPushButton*> buttons = ui->groupBox_3->findChildren<QPushButton*>();
         for(auto button : buttons) {
@@ -538,7 +553,6 @@ void MainWindow::enableGameboardUI() {
             }
         }
     } else {
-        // During a replay, all buttons should be disabled to prevent user clicks.
         disableGameboardUI();
     }
 }
