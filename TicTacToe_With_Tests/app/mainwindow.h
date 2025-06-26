@@ -13,6 +13,7 @@ class GameLogic;
 class QPushButton;
 class QLineEdit;
 class QTimer;
+// REMOVED: class EmailManager;
 
 class MainWindow : public QWidget
 {
@@ -23,52 +24,42 @@ public:
     ~MainWindow();
 
 private slots:
-    // Page 0: Login
+    void handleShowPassword();
     void on_loginButton_clicked();
     void on_signupLoginPageButton_clicked();
-    void on_showLoginPasswordCheckBox_toggled(bool checked);
     void on_noWorriesButton_clicked();
-
-    // Page 2: Signup
     void on_registerButton_clicked();
-    void on_showSignupPasswordCheckBox_toggled(bool checked);
     void on_loginButtonSignupPage_clicked();
-
-    // Page 1: Main Menu
     void on_playerVsAiButton_clicked();
     void on_playerVsPlayerButton_clicked();
     void on_myAccountButton_clicked();
     void on_myGameHistoryButton_clicked();
-
-    // Page 3: Password Reset
     void on_resetPasswordButton_clicked();
-    void on_showResetNewPasswordCheckBox_toggled(bool checked);
     void on_backButtonReset_clicked();
-
-    // Page 4: Personal Info
     void on_backButtonAccount_clicked();
     void on_changePasswordButton_clicked();
     void on_logoutButtonAccount_clicked();
-
-    // Page 5: Game Board
-    void handleBoardClick();
     void on_resetGameboardButton_clicked();
     void on_backButtonGamePage_clicked();
-
-    // Page 6: Game History
     void on_replayGameButton_clicked();
     void on_deleteGameButton_clicked();
     void on_backButtonHistory_clicked();
-    void replayNextMove();
+    void on_startGameButton_clicked();
+    void on_backButtonAiPage_clicked();
+
+    // --- REMOVED VERIFICATION FLOW SLOTS ---
+    // void on_verifyButton_clicked();
+    // void onEmailSent(bool success, const QString& message);
 
     // Game Logic Slots
+    void handleBoardClick();
+    void replayNextMove();
     void onBoardChanged(int row, int col, int player);
     void onGameEnded(const QString& winner, const QStringList& moves);
     void onCurrentPlayerChanged(int player);
 
 private:
     void setupConnections();
-    void togglePasswordVisibility(QLineEdit* lineEdit, bool visible);
     void updateAccountInfoUI(const QVariantMap& userInfo);
     void loadGameHistoryUI();
     void resetBoardUI();
@@ -77,17 +68,20 @@ private:
     void enableGameboardUI();
     void updateGameboardUI();
 
-
     Ui::MainWindow *ui;
     DatabaseManager *dbManager;
     GameLogic *gameLogic;
+    // REMOVED: EmailManager *emailManager;
     QString currentUser;
     QTimer *replayTimer;
     QStringList replayMoves;
     int replayIndex;
     bool isMessageBoxActive;
     bool m_loginInProgress;
-    bool m_isReplayMode; // *FIX: Added flag to track replay mode*
+    bool m_isReplayMode;
+    // --- REMOVED VERIFICATION MEMBER VARIABLES ---
+    // QVariantMap registrationData;
+    // QString verificationCode;
 };
 
 #endif // MAINWINDOW_H
