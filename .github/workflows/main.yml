@@ -1,80 +1,110 @@
-# Name of the workflow
 name: Build and Test Qt Project
 
-# Controls when the workflow runs
 on:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
-# A workflow is made of one or more jobs
 jobs:
-  # Job 1: Build on Linux (Ubuntu)
+  # 🐧 Linux Build
   build_linux:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
       - name: Install Python and aqtinstall
         run: pip install aqtinstall
-      # Install all required graphics libraries for Qt on Linux
+
       - name: Install Linux build dependencies
         run: sudo apt-get update && sudo apt-get install -y libgl1-mesa-dev libegl1-mesa-dev libxcb-xinerama0-dev
-      - name: Install Qt on Linux
-        shell: bash
+
+      - name: Install Qt
         run: |
+          set -e
           aqt install-qt linux desktop 6.6.0 gcc_64 -O ${{ runner.temp }}/Qt
           echo "${{ runner.temp }}/Qt/6.6.0/gcc_64/bin" >> $GITHUB_PATH
+
       - name: Configure and Build
         run: |
+          set -e
           mkdir build && cd build
           qmake ../TicTacToe_With_Tests/TicTacToe_With_Tests.pro
           make
-      - name: Run Tests
-        run: ./build/TicTacToe_With_Tests/tests/tests
 
-  # Job 2: Build on Windows
+      - name: Run Tests
+        run: |
+          set -e
+          TEST_BINARY="./TicTacToe_With_Tests/tests/tests"
+          if [ ! -f "$TEST_BINARY" ]; then
+            echo "❌ Test binary not found: $TEST_BINARY"
+            exit 1
+          fi
+          $TEST_BINARY
+
+  # 🪟 Windows Build
   build_windows:
     runs-on: windows-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      # This action correctly sets up the MSVC compiler environment
+
       - name: Setup MSVC
         uses: ilammy/msvc-dev-cmd@v1
+
       - name: Install Python and aqtinstall
         run: pip install aqtinstall
-      - name: Install Qt on Windows
+
+      - name: Install Qt
         shell: bash
-        run: aqt install-qt windows desktop 6.6.0 win64_msvc2019_64 -O C:/Qt
+        run: |
+          aqt install-qt windows desktop 6.6.0 win64_msvc2019_64 -O C:/Qt
+
       - name: Build and Test
         shell: powershell
         run: |
+          $ErrorActionPreference = "Stop"
           $env:Path = "C:\Qt\6.6.0\msvc2019_64\bin;" + $env:Path
           mkdir build
           cd build
           qmake ..\TicTacToe_With_Tests\TicTacToe_With_Tests.pro
           nmake
-          .\TicTacToe_With_Tests\tests\release\tests.exe
+          $testPath = ".\TicTacToe_With_Tests\tests\release\tests.exe"
+          if (!(Test-Path $testPath)) {
+            Write-Error "❌ Test executable not found: $testPath"
+          }
+          & $testPath
 
-  # Job 3: Build on macOS
+  # 🍎 macOS Build
   build_macos:
     runs-on: macos-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
       - name: Install Python and aqtinstall
         run: pip install aqtinstall
-      - name: Install Qt on macOS
-        shell: bash
+
+      - name: Install Qt
         run: |
+          set -e
           aqt install-qt mac desktop 6.6.0 clang_64 -O ${{ runner.temp }}/Qt
           echo "${{ runner.temp }}/Qt/6.6.0/macos/bin" >> $GITHUB_PATH
-      - name: Configure, Build, and Test
+
+      - name: Configure and Build
         run: |
+          set -e
           mkdir build && cd build
           qmake ../TicTacToe_With_Tests/TicTacToe_With_Tests.pro
           make
+
       - name: Run Tests
-        run: ./build/TicTacToe_With_Tests/tests/tests.app/Contents/MacOS/tests
+        run: |
+          set -e
+          TEST_BINARY="./TicTacToe_With_Tests/tests/tests.app/Contents/MacOS/tests"
+          if [ ! -f "$TEST_BINARY" ]; then
+            echo "❌ Test binary not found: $TEST_BINARY"
+            exit 1
+          fi
+          $TEST_BINARY
