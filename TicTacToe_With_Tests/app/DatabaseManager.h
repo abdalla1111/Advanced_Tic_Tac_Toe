@@ -30,7 +30,7 @@ public:
     ~DatabaseManager();
 
     bool initializeDatabase();
-    bool registerUser(const QString &username, const QString &password, const QString &firstName, const QString &lastName);
+bool registerUser(const QString &username, const QString &password, const QString &email, const QString &firstName, const QString &lastName);
     bool authenticateUser(const QString &username, const QString &password);
     bool resetUserPassword(const QString &username, const QString &newPassword);
     bool saveGameHistory(const QString &player1, const QString &player2, const QString &result, const QStringList &moves);
